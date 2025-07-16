@@ -1,0 +1,77 @@
+.payments-container {
+  padding: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.search-input, .filter-select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  min-width: 160px;
+}
+
+.payments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.payments-table th, .payments-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.payments-table th {
+  background-color: #f4f4f4;
+  color: black;
+}
+
+.payments-table .paid {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.payments-table .pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.pay-btn, .pending-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pay-btn {
+  background-color: green;
+  color: white;
+}
+
+.pay-btn:hover {
+  background-color: #218838;
+}
+
+.pending-btn {
+  background-color: orange;
+  color: white;
+}
+
+.pending-btn:hover {
+  background-color: #e0a800;
+}
+
+.no-results {
+  text-align: center;
+  font-weight: bold;
+  color: #888;
+  margin-top: 20px;
+}

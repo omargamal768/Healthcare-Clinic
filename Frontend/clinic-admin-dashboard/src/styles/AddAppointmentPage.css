@@ -1,0 +1,172 @@
+/* AddAppointmentPage.css */
+.add-appointment-container {
+  padding: 20px;
+}
+
+.add-appointment-container h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.add-appointment-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.form-group select option {
+  font-size: 16px;
+}
+
+.chairs-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.chair-button {
+  width: 45px;
+  height: 45px;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chair-button:hover {
+  background-color: #e0e0e0;
+}
+
+.chair-button.selected {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.chair-button.taken {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+  cursor: not-allowed;
+}
+
+.chair-button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Modal Styles (optional, but good to have consistency) */
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem;
+  border-top-left-radius: calc(0.3rem - 1px);
+  border-top-right-radius: calc(0.3rem - 1px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  margin-bottom: 0;
+  line-height: 1.5;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.btn-close {
+  padding: 0.5rem 0.5rem;
+  margin: -0.5rem -0.5rem -0.5rem auto;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  opacity: 0.5;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0.3rem;
+}
+
+.btn-close:hover {
+  opacity: 0.75;
+}
+
+.modal-body {
+  padding: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem;
+  border-top: 1px solid #dee2e6;
+  border-bottom-right-radius: calc(0.3rem - 1px);
+  border-bottom-left-radius: calc(0.3rem - 1px);
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}

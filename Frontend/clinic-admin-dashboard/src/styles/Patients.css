@@ -1,0 +1,157 @@
+/* Patients.css */
+.patients-container {
+  padding: 20px;
+}
+
+.patients-container h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.filters select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.search-input {
+  flex-grow: 1;
+}
+
+.filters input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.filters .btn.add {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.filters .btn.add:hover {
+  background-color: #0056b3;
+}
+
+.table-container {
+  overflow-x: auto; /* For horizontal scrolling on smaller screens */
+}
+
+.patients-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden; /* To contain the border-radius of header and rows */
+}
+
+.patients-table thead th {
+  background-color: #f8f9fa;
+  color: #333;
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+}
+
+.patients-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.patients-table tbody tr:hover {
+  background-color: #e9ecef;
+  transition: background-color 0.3s ease;
+}
+
+.patients-table tbody td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.patients-table tbody td.actions {
+  white-space: nowrap; /* Prevent buttons from wrapping */
+}
+
+.patients-table tbody td.actions .btn {
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 8px 12px;
+  font-size: 0.9em;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: opacity 0.3s ease;
+}
+
+.patients-table tbody td.actions .btn:hover {
+  opacity: 0.8;
+}
+
+.patients-table tbody td.actions .btn.profile {
+  background-color: #007bff;
+}
+
+.patients-table tbody td.actions .btn.edit {
+  background-color: #28a745;
+}
+
+.patients-table tbody td.actions .btn.delete {
+  background-color: #dc3545;
+}
+.search-input .error-message {
+  color: red;
+  font-size: 0.8em;
+  margin-top: 5px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.pagination button:hover {
+  background-color: #eee;
+}
+
+.pagination button.active {
+  background-color: #007bff; /* Or your primary color */
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination button:disabled {
+  background-color: #ddd;
+  color: #999;
+  cursor: not-allowed;
+  border-color: #ddd;
+}

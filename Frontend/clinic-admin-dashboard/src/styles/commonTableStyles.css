@@ -1,0 +1,91 @@
+/* Common table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #4CAF50; /* Change the header background color */
+    color: white;
+  }
+  
+  td {
+    background-color: #f9f9f9;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  tr:hover {
+    background-color: #ddd;
+  }
+  
+  .no-results {
+    text-align: center;
+    font-style: italic;
+    color: #888;
+  }
+  
+  /* Action buttons */
+  button {
+    background-color: #4CAF50; /* Green background */
+    color: white;
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  /* Special styles for different statuses */
+  .success {
+    background-color: #4CAF50;
+  }
+  
+  .cancelled {
+    background-color: #f44336;
+  }
+  
+  .actions button {
+    margin: 0 5px;
+  }
+  
+  /* Pagination styles */
+  .pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .pagination button.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  .pagination button:hover {
+    background-color: #45a049;
+  }
+  
+  .pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  

@@ -1,0 +1,132 @@
+{
+  "clinic_admin": "عيادة المدير",
+  "profile": "الملف الشخصي",
+  "settings": "الإعدادات",
+  "logout": "تسجيل الخروج",
+  "no_notifications": "لا توجد إشعارات",
+  "welcome": "مرحبا",
+  "notifications": "الإشعارات",
+  "dashboard": "لوحة التحكم",
+  "patients": "المرضى",
+  "appointments": "المواعيد",
+  "payments": "المدفوعات",
+  "control_panel": "لوحة التحكم",
+
+  "total_patients": "إجمالي المرضى",
+  "all_examinations": "كل الكشوفات",
+  "all_consultations": "كل الاستشارات",
+  "total_income": "إجمالي الإيرادات",
+  "today_statistics": "إحصائيات اليوم",
+
+  "pending_appointments": "المواعيد المعلقة",
+  "pending_examinations": "الكشوفات المعلقة",
+  "pending_consultations": "الاستشارات المعلقة",
+  "successful_appointments": "المواعيد الناجحة",
+  "successful_examinations": "الكشوفات الناجحة",
+  "successful_consultations": "الاستشارات الناجحة",
+  "todays_pending_appointments": "مواعيد اليوم المعلقة",
+  "no_pending_appointments": "لا توجد مواعيد معلقة اليوم.",
+  "completed": "تم",
+
+  "monthly_trends": "اتجاهات المواعيد الشهرية",
+  "select_year": "اختر السنة",
+  "patient":"المريض",
+  "turn": "الدور",
+  "searchByName": "بحث بالاسم",
+  "searchByMobile": "بحث برقم الهاتف",
+  "searchPlaceholder": "ابحث حسب {{type}}...",
+
+  "name": "الاسم",
+  "mobile": "رقم الهاتف",
+  "actions": "الإجراءات",
+  "edit": "تعديل",
+  "delete": "حذف",
+  "previous": "السابق",
+  "next": "التالي",
+
+  "addNewPatient": "إضافة مريض جديد",
+  "editPatient": "تعديل المريض",
+  "updatePatient": "تحديث المريض",
+  "addPatient": "إضافة المريض",
+
+  "confirmDeleteMessage": "هل أنت متأكد أنك تريد حذف هذا المريض؟",
+  "confirmDelete": "نعم، احذف",
+  "cancel": "إلغاء",
+
+  "mobilePrefixError": "رقم الهاتف يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015.",
+  "mobileLengthError": "رقم الهاتف يجب أن يتكون من 11 رقمًا.",
+  "mobileRequired": "رقم الهاتف مطلوب.",
+  "mobileDigitsOnly": "يجب أن يحتوي رقم الهاتف على أرقام فقط.",
+  "mobileExists": "رقم الهاتف موجود بالفعل.",
+
+  "nameRequired": "الاسم مطلوب.",
+  "nameTooLong": "يجب ألا يزيد الاسم عن 30 حرفًا.",
+
+  "not_found": "غير موجود",
+  "backToPatients": "العودة إلى المرضى",
+
+  "personal_information": "المعلومات الشخصية",
+  
+  
+  
+  "day": "اليوم",
+  "status": "الحالة",
+  "cancelled": "ملغي",
+
+  "noAppointments": "لا توجد مواعيد لهذا المريض.",
+  "makeNewAppointment": "إنشاء موعد جديد",
+  "addNewAppointment": "إضافة موعد جديد",
+
+  "patientName": "الاسم",
+  "patientMobile": "رقم الهاتف",
+  
+  "manage_appointments_efficiently": "إدارة مواعيد العيادات بكفاءة.",
+  "search_by_name_or_date": "بحث بالاسم أو التاريخ...",
+  "all_clinics": "كل العيادات",
+  
+  
+  "all_types": "كل الأنواع",
+  
+  "no_appointments_found": "لا توجد مواعيد.",
+  "monday": "الاثنين",
+  "tuesday": "الثلاثاء",
+  "wednesday": "الأربعاء",
+  "thursday": "الخميس",
+  "friday": "الجمعة",
+  "saturday": "السبت",
+  "sunday": "الأحد",
+  "welcome_clinic_admin": "مرحبا بك في لوحة تحكم العيادة.",
+  "payment_id": "رقم الدفع",
+  
+  "appointment_id": "رقم الموعد",
+  "cost": "التكلفة",
+  
+  "free": "مجاني",
+  "pending": "قيد الانتظار",
+  "paid": "تم الدفع",
+  "mark_as_paid": "تأكيد الدفع",
+  "set_to_pending": "تعيين كمعلق",
+  "no_payments_found": "لا توجد مدفوعات.",
+  "add_new_appointment": "إضافة موعد جديد",
+  "patient_name": "اسم المريض",
+  "loading": "تحميل...",
+  "date": "التاريخ",
+  "clinic": "العيادة",
+  "al_matareya": "المطرية",
+  "misr_el_gedida": "مصر الجديدة",
+  "type": "النوع",
+  "examination": "كشف",
+  "consultation": "استشارة",
+  
+  "appointment_cost": "تكلفة الموعد",
+  "add_appointment": "إضافة الموعد",
+  "please_select_patient": "يرجى اختيار مريض.",
+  "please_select_date_turn": "يرجى اختيار التاريخ والدور.",
+  "turn_taken": "الدور {{turn}} محجوز بالفعل في {{date}}.",
+  "patient_has_appointment": "لدى المريض بالفعل موعد في هذا التاريخ.",
+  "unknown": "غير معروف",
+  "action": "إجراء",
+  "at": "في",
+  "error": "خطأ",
+  "close": "إغلاق"
+}
