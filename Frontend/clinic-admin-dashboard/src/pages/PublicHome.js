@@ -1,16 +1,13 @@
-// src/pages/PublicHome.js
 import React from 'react';
 import "../styles/public.css";
 import { HashLink as Link } from 'react-router-hash-link';
 
 const PublicHome = () => {
-  
-
   return (
     <div>
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-        <div className="container">
+        <div className="container-fluid">
           <a className="navbar-brand d-flex align-items-center" href="#">
             <img
               src="https://via.placeholder.com/40x40?text=🏥"
@@ -31,26 +28,26 @@ const PublicHome = () => {
           </button>
           <div className="collapse navbar-collapse" id="clinicNavbar">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-  <li className="nav-item">
-    <Link smooth className="nav-link active" to="#about">نبذة</Link>
-  </li>
-  <li className="nav-item">
-    <Link smooth className="nav-link" to="#services">الخدمات</Link>
-  </li>
-  <li className="nav-item">
-    <Link smooth className="nav-link" to="#clinics">العيادات</Link>
-  </li>
-  <li className="nav-item">
-    <Link smooth className="nav-link" to="#booking">الحجز</Link>
-  </li>
-</ul>
+              <li className="nav-item">
+                <Link smooth className="nav-link active" to="#about">نبذة</Link>
+              </li>
+              <li className="nav-item">
+                <Link smooth className="nav-link" to="#services">الخدمات</Link>
+              </li>
+              <li className="nav-item">
+                <Link smooth className="nav-link" to="#clinics">العيادات</Link>
+              </li>
+              <li className="nav-item">
+                <Link smooth className="nav-link" to="#booking">الحجز</Link>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
 
       {/* About Section */}
       <section id="about" className="py-5 bg-light">
-        <div className="container">
+        <div className="container-fluid">
           <h2 className="text-center mb-4">نبذة عن الطبيب</h2>
           <div className="row align-items-start">
             <div className="col-md-4 text-center mb-3">
@@ -85,7 +82,7 @@ const PublicHome = () => {
       </section>
 
       {/* Services Section */}
-      <section className="container" id="services">
+      <section className="container-fluid" id="services">
         <h2 className="text-center mb-4">الخدمات الطبية</h2>
         <div className="row g-4">
           <div className="col-md-4">
@@ -116,7 +113,7 @@ const PublicHome = () => {
       </section>
 
       {/* Clinics Section */}
-      <section className="container" id="clinics">
+      <section className="container-fluid" id="clinics">
         <h2 className="text-center mb-4">أماكن وعناوين العيادات</h2>
         <div className="row g-4">
           <div className="col-md-6">
@@ -162,7 +159,7 @@ const PublicHome = () => {
 
       {/* Booking Section */}
       <section className="bg-light" id="booking">
-        <div className="container">
+        <div className="container-fluid">
           <h2 className="text-center mb-4">حجز موعد</h2>
           <form className="row g-3">
             <div className="col-md-6">
@@ -194,7 +191,7 @@ const PublicHome = () => {
 
       {/* Footer */}
       <footer className="text-center mt-5 py-4 bg-white shadow-sm">
-        <div className="container">
+        <div className="container-fluid">
           <p className="mb-2">© 2025 جميع الحقوق محفوظة للدكتور جمال أبورجيلة</p>
           <div>
             <a href="#about">نبذة عن الطبيب</a> |
