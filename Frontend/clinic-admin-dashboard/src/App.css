@@ -44,8 +44,8 @@ body.rtl .sidebar {
 }
 
 /* Main content wrapper */
-.content {
-  margin-left: 250px; /* Spacing for the fixed sidebar */
+.app.with-sidebar .content {
+  margin-left: 250px;
   flex-grow: 1; /* Take remaining width */
   display: flex;
   flex-direction: column; /* Stack navbar and main content */
@@ -53,32 +53,60 @@ body.rtl .sidebar {
   overflow: hidden; /* Prevent content container scrollbars */
 }
 
-/* Change content margin to the right in RTL mode */
-body.rtl .content {
-  margin-right: 250px; /* Move content to the right for RTL layout */
-  margin-left: 0; /* Remove the left margin */
+/* RTL support */
+body.rtl .app.with-sidebar .content {
+  margin-left: 0;
+  margin-right: 250px;
+}
+
+/* Default content (no sidebar) */
+.content {
+  margin-left: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Navbar styling */
 .navbar {
-  background-color: #34495e; /* Light background */
-  color: #34495e; /* Dark text */
+  background-color: #34495e;
+  color: #fff;
   padding: 10px 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed; /* Fix the navbar to the top of the content area */
+  position: fixed;
   top: 0;
-  left: 250px; /* Align with the start of the content */
-  width: calc(100% - 250px); /* Adjust width for the sidebar */
-  z-index: 1000; /* Ensure it's above other content */
+  z-index: 1000;
 }
 
-/* Change navbar position in RTL mode */
-body.rtl .navbar {
+/* With sidebar (role applied) */
+.app.with-sidebar .navbar {
+  left: 250px;
+  width: calc(100% - 250px);
+}
+
+/* No sidebar (no role) */
+.app:not(.with-sidebar) .navbar,
+.app.no-sidebar .navbar {
+  left: 0px;
+  width: 100%;
+}
+
+/* RTL support for navbar */
+body.rtl .app.with-sidebar .navbar {
   left: auto;
-  right: 250px; /* Move navbar to the right for RTL layout */
+  right: 250px;
+  width: calc(100% - 250px);
+}
+body.rtl .app:not(.with-sidebar) .navbar,
+body.rtl .app.no-sidebar .navbar {
+  right: 0;
+  left: auto;
+  width: 100%;
 }
 
 /* Scrollable main content area */

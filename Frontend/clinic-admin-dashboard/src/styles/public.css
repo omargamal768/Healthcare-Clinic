@@ -1,10 +1,17 @@
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Cairo", sans-serif;
   background-color: #f8f9fa;
+  direction: rtl;
+  text-align: right;
 }
 
 h1, h2 {
   font-weight: 700;
+  text-align: center;
 }
 
 .card-title {
@@ -16,22 +23,51 @@ footer p {
   margin: 0;
   font-size: 0.95rem;
 }
+
 #about ul.list-group li {
   font-size: 1.05rem;
   line-height: 1.6;
+  text-align: right;
 }
+
 #about img {
   object-fit: cover;
 }
+
 .navbar-brand {
   font-size: 1.2rem;
   color: #0d6efd;
 }
+
+.navbar-nav {
+  margin-right: auto !important;
+}
+
 .navbar-nav .nav-link {
   color: #0d6efd;
   font-weight: 500;
+  padding-left: 1rem;
+  padding-right: 0;
+  text-align: right;
 }
+
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link.active {
   color: #0a58ca;
+}
+
+.clinic-card {
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: right;
+}
+
+.clinic-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.location iframe {
+  border-radius: 12px;
+  min-height: 200px;
 }

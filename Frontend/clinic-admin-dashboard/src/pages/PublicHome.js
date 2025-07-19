@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "../styles/public.css";
-import { HashLink as Link } from 'react-router-hash-link';
+import profileImg from '../imges/profile.png';
 
 const PublicHome = () => {
+  useEffect(() => {
+    document.body.classList.add('rtl');
+    return () => {
+      document.body.classList.remove('rtl');
+    };
+  }, []);
+
   return (
     <div>
+      <div id="top"></div>
+
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
         <div className="container-fluid">
-          <a className="navbar-brand d-flex align-items-center" href="#">
-            <img
-              src="https://via.placeholder.com/40x40?text=🏥"
-              alt="عيادة"
-              width="40"
-              height="40"
-              className="me-2"
-            />
+          <a href="#top" className="navbar-brand d-flex align-items-center">
             <strong>عيادة د. جمال أبورجيلة</strong>
           </a>
           <button
@@ -27,40 +29,33 @@ const PublicHome = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="clinicNavbar">
-            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link smooth className="nav-link active" to="#about">نبذة</Link>
-              </li>
-              <li className="nav-item">
-                <Link smooth className="nav-link" to="#services">الخدمات</Link>
-              </li>
-              <li className="nav-item">
-                <Link smooth className="nav-link" to="#clinics">العيادات</Link>
-              </li>
-              <li className="nav-item">
-                <Link smooth className="nav-link" to="#booking">الحجز</Link>
-              </li>
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item"><a className="nav-link active" href="#about">نبذة</a></li>
+              <li className="nav-item"><a className="nav-link" href="#services">الخدمات</a></li>
+              <li className="nav-item"><a className="nav-link" href="#clinics">العيادات</a></li>
+              <li className="nav-item"><a className="nav-link" href="#booking">الحجز</a></li>
             </ul>
           </div>
         </div>
       </nav>
 
-      {/* About Section */}
+      {/* About */}
       <section id="about" className="py-5 bg-light">
         <div className="container-fluid">
           <h2 className="text-center mb-4">نبذة عن الطبيب</h2>
-          <div className="row align-items-start">
+          <div className="row align-items-start flex-row-reverse">
             <div className="col-md-4 text-center mb-3">
               <img
-                src="https://via.placeholder.com/250x250?text=د.جمال+أبورجيلة"
+                src={profileImg}
                 className="rounded-circle shadow"
-                alt="دكتور جمال"
+                alt="صورة دكتور جمال أبورجيلة"
                 width="250"
                 height="250"
+                loading="lazy"
               />
               <h4 className="mt-3">د. جمال أبورجيلة</h4>
               <p className="text-muted">
-                استشاري اول علاج و جراحة المسالك البولية و الكلى و البروستاتة استشاري اول علاج أمراض و جراحة الذكورة و العقم عند الرجال
+                استشاري أول في علاج وجراحة المسالك البولية والكلى والبروستاتا، وأمراض الذكورة والعقم عند الرجال.
               </p>
             </div>
             <div className="col-md-8">
@@ -71,7 +66,7 @@ const PublicHome = () => {
                 <li className="list-group-item">🎓 ماجستير المسالك البولية - قصر العيني</li>
                 <li className="list-group-item">🏥 استشاري أول بمستشفيات العاصمة والدعاء والرحمة</li>
                 <li className="list-group-item">💥 متخصص في تفتيت الحصوات بالموجات التصادمية والمنظار</li>
-                <li className="list-group-item">🧬 استشاري علاج الضعف الجنسي، دعامات القضيب، سرعة القذف، واستئصال الدوالي</li>
+                <li className="list-group-item">🧬 علاج الضعف الجنسي، دعامات القضيب، سرعة القذف، واستئصال الدوالي</li>
                 <li className="list-group-item">🧫 علاج أورام المثانة</li>
                 <li className="list-group-item">🏛 يعمل بالمعهد القومي للكلى والمسالك البولية</li>
                 <li className="list-group-item">💰 أسعار العمليات تشمل أجر الجراح فقط</li>
@@ -81,84 +76,90 @@ const PublicHome = () => {
         </div>
       </section>
 
-      {/* Services Section */}
-      <section className="container-fluid" id="services">
+      {/* Services */}
+      <section id="services" className="container-fluid py-5">
         <h2 className="text-center mb-4">الخدمات الطبية</h2>
         <div className="row g-4">
-          <div className="col-md-4">
-            <div className="card h-100 border-0 shadow-sm">
-              <div className="card-body text-center">
-                <h5 className="card-title">علاج أمراض الكلى</h5>
-                <p className="card-text">تشخيص وعلاج القصور الكلوي، الالتهابات، والفشل الكلوي المزمن.</p>
+          {[
+            { title: "علاج أمراض الكلى", text: "تشخيص وعلاج القصور الكلوي، الالتهابات، والفشل الكلوي المزمن." },
+            { title: "حصوات الكلى والمثانة", text: "علاج الحصوات بالأدوية أو الموجات التصادمية أو التدخل الجراحي البسيط." },
+            { title: "أمراض الذكورة والعقم", text: "علاج ضعف الانتصاب والعقم عند الرجال باستخدام أحدث البروتوكولات." }
+          ].map((service, i) => (
+            <div className="col-md-4" key={i}>
+              <div className="card h-100 border-0 shadow-sm text-center">
+                <div className="card-body">
+                  <h5 className="card-title">{service.title}</h5>
+                  <p className="card-text">{service.text}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card h-100 border-0 shadow-sm">
-              <div className="card-body text-center">
-                <h5 className="card-title">حصوات الكلى والمثانة</h5>
-                <p className="card-text">علاج الحصوات بالأدوية أو الموجات التصادمية أو التدخل الجراحي البسيط.</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card h-100 border-0 shadow-sm">
-              <div className="card-body text-center">
-                <h5 className="card-title">أمراض الذكورة والعقم</h5>
-                <p className="card-text">علاج ضعف الانتصاب والعقم عند الرجال باستخدام أحدث البروتوكولات.</p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Clinics Section */}
-      <section className="container-fluid" id="clinics">
-        <h2 className="text-center mb-4">أماكن وعناوين العيادات</h2>
+      {/* Clinics */}
+      <section id="clinics" className="container py-5">
+        <h2 className="text-center mb-5 text-primary fw-bold">أماكن وعناوين العيادات</h2>
         <div className="row g-4">
-          <div className="col-md-6">
-            <div className="card shadow-sm">
-              <div className="card-body">
-                <h5 className="card-title">عيادة المطرية</h5>
-                <p className="card-text">شارع المطراوي، المطرية، القاهرة</p>
-                <div className="location">
-                  <iframe
-                    src="https://www.google.com/maps?q=30.127174,31.291936&z=15&output=embed"
-                    width="100%"
-                    height="200"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    title="عيادة المطرية"
-                  ></iframe>
+          {[
+            {
+              title: "عيادة مصر الجديدة",
+              address: "٣ شارع دمنهور، متفرع من شارع هارون الرشيد، بالقرب من ميدان صلاح الدين، مصر الجديدة، القاهرة",
+              phone: "01280576720",
+              coords: "30.0965551,31.3310337",
+              workingHours: "من السبت إلى الخميس من الساعة 5 مساءً إلى 7 مساءً"
+            },
+            {
+              title: "عيادة ميدان المطرية",
+              address: "ميدان المطرية، أبراج العز، برج (ا)، الدور الثاني، شقة ٢١٥",
+              phone: "01063432743",
+              coords: "30.1152462,31.3053494",
+              workingHours: "من السبت إلى الخميس من الساعة 8 مساءً إلى 11 مساءً"
+            }
+          ].map((clinic, i) => (
+            <div className="col-md-6" key={i}>
+              <div className="card clinic-card border-0 shadow-sm h-100">
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title text-dark fw-bold mb-3">{clinic.title}</h5>
+                  <p className="card-text text-secondary mb-2">
+                    <i className="bi bi-geo-alt-fill text-primary me-2"></i>{clinic.address}
+                  </p>
+                  <p className="card-text mb-2">
+                    <i className="bi bi-telephone-fill text-success me-2"></i>
+                    <strong>رقم الهاتف:</strong> {clinic.phone}
+                  </p>
+                  <p className="card-text mb-3">
+                    <i className="bi bi-clock-fill text-warning me-2"></i>
+                    <strong>مواعيد العمل:</strong> {clinic.workingHours}
+                  </p>
+                  <div className="location rounded overflow-hidden shadow-sm mb-3">
+                    <iframe
+                      src={`https://www.google.com/maps?q=${clinic.coords}&z=15&output=embed`}
+                      width="100%"
+                      height="200"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      title={clinic.title}
+                    ></iframe>
+                  </div>
+                  <a
+                    href={`https://wa.me/2${clinic.phone.replace(/^0/, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-success mt-auto w-100"
+                  >
+                    <i className="bi bi-whatsapp me-2"></i> تواصل عبر واتساب
+                  </a>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6">
-            <div className="card shadow-sm">
-              <div className="card-body">
-                <h5 className="card-title">عيادة المرج</h5>
-                <p className="card-text">شارع محطة المرج، المرج، القاهرة</p>
-                <div className="location">
-                  <iframe
-                    src="https://www.google.com/maps?q=30.161869,31.340011&z=15&output=embed"
-                    width="100%"
-                    height="200"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    loading="lazy"
-                    title="عيادة المرج"
-                  ></iframe>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* Booking Section */}
-      <section className="bg-light" id="booking">
+      {/* Booking */}
+      <section id="booking" className="bg-light py-5">
         <div className="container-fluid">
           <h2 className="text-center mb-4">حجز موعد</h2>
           <form className="row g-3">
@@ -194,10 +195,7 @@ const PublicHome = () => {
         <div className="container-fluid">
           <p className="mb-2">© 2025 جميع الحقوق محفوظة للدكتور جمال أبورجيلة</p>
           <div>
-            <a href="#about">نبذة عن الطبيب</a> |
-            <a href="#services">الخدمات</a> |
-            <a href="#clinics">العيادات</a> |
-            <a href="#booking">الحجز</a>
+            <a href="#about">نبذة</a> | <a href="#services">الخدمات</a> | <a href="#clinics">العيادات</a> | <a href="#booking">الحجز</a>
           </div>
         </div>
       </footer>
