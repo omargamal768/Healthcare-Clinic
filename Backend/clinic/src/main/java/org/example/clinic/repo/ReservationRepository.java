@@ -1,5 +1,6 @@
 package org.example.clinic.repo;
 
+import org.example.clinic.model.Patient;
 import org.example.clinic.model.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @Query("SELECT r.turn FROM Reservation r WHERE r.date = :date")
     List<Integer> findReservedTurnsByDate(LocalDate date);
 
+    // ✅ This checks if a reservation exists for a patient on a specific date
+    boolean existsByPatientAndDate(Patient patient, LocalDate date);
+
+    // ✅ This is used to get turn number by counting reservations on that date
+    int countByDate(LocalDate date);
 }

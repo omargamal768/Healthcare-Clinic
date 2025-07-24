@@ -8,8 +8,8 @@
 /* Sidebar styling */
 .sidebar {
   width: 250px;
-  background-color: #2c3e50; /* Dark background */
-  color: white;
+  background-color:white; /* Dark background */
+  color: blueviolet;
   padding: 20px 0; /* Adjust vertical padding as needed */
   height: 100vh;
   position: fixed; /* Keep it fixed */
@@ -29,7 +29,7 @@ body.rtl .sidebar {
 .sidebar a {
   display: block;
   padding: 10px 20px;
-  color: white;
+color: blueviolet;
   text-decoration: none;
   transition: background-color 0.3s ease;
 }
@@ -71,8 +71,8 @@ body.rtl .app.with-sidebar .content {
 
 /* Navbar styling */
 .navbar {
-  background-color: #34495e;
-  color: #fff;
+  background-color: #fff; /* White background */
+  color: blueviolet; /* Dark text color */
   padding: 10px 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;

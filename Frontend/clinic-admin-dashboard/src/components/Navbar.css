@@ -4,10 +4,11 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #fff;
+  background-color:blueviolet;
   border-bottom: 1px solid #ccc;
   position: relative;
   z-index: 20;
+  background: #fff;
 }
 
 .navbar-icons {

@@ -1,58 +1,179 @@
-/* ./Login.css */
-
 .login-container {
-    display: flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient to right, #e0f2f7, #f7e0f2); /* Light blue to light pink gradient */
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden; /* Ensures rounded corners apply to children */
+  width: 3000px; /* Adjust as needed */
+  max-width: 100%; /* Responsive width */
+}
+
+.login-form-section {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-form-section h2 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.login-form-section .logo-text {
+  color: #eb407a; /* Pink color from the image */
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+.login-form-section .welcome-text {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 0.9em;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #555;
+  font-weight: bold;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  box-sizing: border-box;
+  background-color: #f7f9fc; /* Light background for inputs */
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus {
+  outline: none;
+  border-color: #a7d9ff; /* Light blue focus border */
+  box-shadow: 0 0 5px rgba(167, 217, 255, 0.5);
+}
+
+.navbar-brand {
+  font-size: 1.2rem;
+  color: #0d6efd;
+}
+
+.navbar-nav {
+  margin-right: auto !important;
+}
+
+.navbar-nav .nav-link {
+  color: #0d6efd;
+  font-weight: 500;
+  padding-left: 1rem;
+  padding-right: 0;
+  text-align: right;
+}
+.navbar-brand {
+  font-size: 1.2rem;
+  color: #0d6efd;
+  text-align: left;
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  color: #0a58ca;
+}
+.login-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #eb407a; /* Pink button color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.login-button:hover {
+  background-color: #d13a6e; /* Darker pink on hover */
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+
+
+
+
+
+
+
+
+.login-illustration-section {
+  flex: 1;
+  background: linear-gradient(to bottom right, #a7d9ff, #f7e0f2); /* Light blue to light pink gradient */
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-illustration-section img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .login-card {
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh; /* Make it take up the full viewport height */
-    background-color: #f4f4f4; /* Light background color */
+    width: 90%;
   }
-  
-  h2 {
-    color: #333;
-    margin-bottom: 20px;
+
+  .login-illustration-section {
+    min-height: 200px; /* Give some height on smaller screens */
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 0; /* Remove bottom-left radius on small screens */
   }
-  
-  .form-group {
-    margin-bottom: 15px;
-    width: 300px; /* Adjust width as needed */
+
+  .login-form-section {
+    padding: 30px;
   }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-    color: #555;
-    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  .login-form-section h2 {
+    font-size: 2em;
   }
-  
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Ensure padding and border are inside the element's width */
-    font-size: 16px;
+  .login-form-section {
+    padding: 20px;
   }
-  
-  button[type="submit"] {
-    background-color: #007bff; /* Blue button */
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-  }
-  
-  .error-message {
-    color: #dc3545; /* Red color for error messages */
-    margin-bottom: 10px;
-    font-size: 14px;
-  }
+}

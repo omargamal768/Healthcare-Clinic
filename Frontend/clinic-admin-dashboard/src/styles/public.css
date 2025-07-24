@@ -2,7 +2,7 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+.bodyy {
   font-family: "Cairo", sans-serif;
   background-color: #f8f9fa;
   direction: rtl;
@@ -70,4 +70,8 @@ footer p {
 .location iframe {
   border-radius: 12px;
   min-height: 200px;
+}
+.date-picker-container {
+  direction: rtl;
+  margin-bottom: 1rem;
 }

@@ -12,7 +12,10 @@
   transition: 0.3s;
   overflow-y: auto;
 }
-
+.sidebar-header {
+  
+  margin-top: 100px;
+}
 /* Sidebar Links */
 .sidebar a {
   color: white;

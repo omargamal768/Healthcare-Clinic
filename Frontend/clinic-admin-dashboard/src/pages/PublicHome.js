@@ -1,17 +1,222 @@
-import React, { useEffect } from 'react';
+
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import "../styles/public.css";
 import profileImg from '../imges/profile.png';
 
 const PublicHome = () => {
-  useEffect(() => {
-    document.body.classList.add('rtl');
-    return () => {
-      document.body.classList.remove('rtl');
-    };
-  }, []);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '', // This will now act as 'mobile' from AddPatient
+    clinic: '',
+    date: ''
+  });
+
+  const [minDate, setMinDate] = useState('');
+  const [maxDate, setMaxDate] = useState('');
+
+  // States for name and phone errors, mirroring AddPatient
+  const [nameError, setNameError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  // mobileExistsError is not needed here as public form won't check uniqueness against all patients
+  // const [mobileExistsError, setMobileExistsError] = useState('');
+
+
+useEffect(() => {
+  document.body.classList.add('rtl');
+
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  const year = today.getFullYear();
+  const month = today.getMonth(); // 0-indexed
+  const lastDayOfMonth = new Date(year, month + 1, 0); // correct last day of current month
+
+  const formatDateLocal = (date) => date.toLocaleDateString('en-CA'); // YYYY-MM-DD in local time
+
+  setMinDate(formatDateLocal(today));
+  setMaxDate(formatDateLocal(lastDayOfMonth));
+
+  return () => {
+    document.body.classList.remove('rtl');
+  };
+}, []);
+
+
+
+  // --- START: Validation functions adapted from AddPatient ---
+
+  const validateName = (nameValue) => {
+    if (!nameValue) return "الاسم مطلوب.";
+    if (nameValue.length > 30) {
+      return "الاسم يجب أن لا يزيد عن 30 حرفًا.";
+    }
+    // Check for at least two words
+    if (nameValue.trim().split(/\s+/).length < 2) {
+      return "الاسم يجب أن يحتوي على كلمتين على الأقل.";
+    }
+    return "";
+  };
+
+  const validatePhone = (mobileValue) => {
+    if (!mobileValue) return "رقم الموبايل مطلوب.";
+    // Regex: starts with 010, 011, 012, or 015 AND is exactly 11 digits
+    if (!/^01[0125][0-9]{8}$/.test(mobileValue)) {
+      return "رقم الموبايل يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015 ويكون 11 رقمًا.";
+    }
+    return "";
+  };
+
+  // --- END: Validation functions adapted from AddPatient ---
+
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    let newFormData = { ...formData, [id]: value };
+    let currentNameError = nameError;
+    let currentPhoneError = phoneError;
+
+    if (id === 'name') {
+      // Real-time truncation and error for name (max 30 characters)
+      if (value.length > 30) {
+        currentNameError = "الاسم يجب أن لا يزيد عن 30 حرفًا.";
+        newFormData = { ...newFormData, [id]: value.slice(0, 30) };
+      } else {
+        currentNameError = ''; // Clear error if within bounds
+        newFormData = { ...newFormData, [id]: value };
+      }
+      setNameError(currentNameError);
+      setFormData(newFormData);
+
+    } else if (id === 'phone') {
+      let tempPhoneValue = value;
+
+      // Ensure only digits are entered
+      if (!/^[0-9]*$/.test(tempPhoneValue)) {
+          setPhoneError("رقم الموبايل يجب أن يحتوي على أرقام فقط.");
+          return; // Stop processing if non-digit found
+      }
+
+      // --- Start of stricter prefix enforcement ---
+
+      if (tempPhoneValue.length > 0) {
+          // Rule 1: First digit must be '0'
+          if (tempPhoneValue.length === 1 && tempPhoneValue !== '0') {
+              setPhoneError("رقم الموبايل يجب أن يبدأ بـ 0.");
+              setFormData(prev => ({ ...prev, [id]: '' })); // Clear the input field
+              return;
+          }
+          // Rule 2: Second digit must be '1' if first is '0'
+          if (tempPhoneValue.length === 2 && !/^01$/.test(tempPhoneValue)) {
+              setPhoneError("رقم الموبايل يجب أن يبدأ بـ 01.");
+              setFormData(prev => ({ ...prev, [id]: tempPhoneValue.slice(0, 1) })); // Keep just the '0'
+              return;
+          }
+          // Rule 3: Third digit must be 0, 1, 2, or 5 if first two are '01'
+          if (tempPhoneValue.length === 3 && !/^01[0125]$/.test(tempPhoneValue)) {
+              setPhoneError("رقم الموبايل يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015.");
+              setFormData(prev => ({ ...prev, [id]: tempPhoneValue.slice(0, 2) })); // Keep just the '01'
+              return;
+          }
+          // If a character makes the prefix invalid, it's immediately rejected above.
+          // So, if we reach here, the prefix is valid so far.
+          currentPhoneError = ""; // Clear any previous prefix error if valid.
+      } else {
+          currentPhoneError = "رقم الموبايل مطلوب."; // If field becomes empty
+      }
+
+      // --- End of stricter prefix enforcement ---
+
+      // Truncate if more than 11 digits
+      if (tempPhoneValue.length > 11) {
+        tempPhoneValue = tempPhoneValue.slice(0, 11);
+        currentPhoneError = "رقم الموبايل يجب أن يكون 11 رقمًا بالضبط.";
+      } 
+      // Do not clear currentPhoneError here if it's already set by prefix rules.
+      // The condition `tempPhoneValue.length < 11` combined with `tempPhoneValue.length > 0`
+      // below means we are checking for length, but the prefix errors should take precedence.
+      // So, if `currentPhoneError` is already set by the prefix, don't clear it here.
+      else if (tempPhoneValue.length > 0 && tempPhoneValue.length < 11 && currentPhoneError === "") {
+        currentPhoneError = "رقم الموبايل يجب أن يكون 11 رقمًا."; // More specific error for length
+      }
+
+
+      // If the input is exactly 11 digits and no prefix/length error, perform the full regex validation
+      if (tempPhoneValue.length === 11 && currentPhoneError === '') {
+        const fullValidationResult = validatePhone(tempPhoneValue);
+        if (fullValidationResult) {
+            currentPhoneError = fullValidationResult;
+        }
+      }
+
+      setFormData(prev => ({ ...prev, [id]: tempPhoneValue }));
+      setPhoneError(currentPhoneError);
+
+
+    } else if (id === 'date') {
+      const selectedDate = new Date(value);
+      const day = selectedDate.getDay(); // 5 = Friday
+      if (day === 5) {
+        alert("لا يمكن الحجز يوم الجمعة لأنه عطلة");
+        setFormData(prev => ({ ...prev, [id]: '' })); // Clear the invalid date
+        return;
+      }
+      setFormData(prev => ({ ...prev, [id]: value }));
+    } else {
+      setFormData(prev => ({ ...prev, [id]: value }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { id, value } = e.target;
+    if (id === 'name') {
+      const error = validateName(value);
+      setNameError(error);
+    } else if (id === 'phone') {
+      const error = validatePhone(value); // Use the comprehensive validation on blur
+      setPhoneError(error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Run all validations on submission
+    const nameValidationError = validateName(formData.name);
+    const phoneValidationError = validatePhone(formData.phone);
+
+    setNameError(nameValidationError);
+    setPhoneError(phoneValidationError);
+
+    // Check if form is valid before submitting
+    if (nameValidationError || phoneValidationError || !formData.date || !formData.clinic) {
+      alert("الرجاء مراجعة البيانات المدخلة والتأكد من صحتها.");
+      return;
+    }
+
+    try {
+      const requestBody = {
+        name: formData.name,
+        mobile: formData.phone, // Ensure backend expects 'mobile'
+        clinicName: formData.clinic,
+        date: formData.date
+      };
+
+      await axios.post('http://localhost:8080/api/public/reserve', requestBody);
+      alert("تم إرسال الحجز بنجاح");
+      // Clear form after successful submission
+      setFormData({ name: '', phone: '', clinic: '', date: '' });
+      setNameError('');
+      setPhoneError('');
+    } catch (error) {
+      alert("حدث خطأ أثناء إرسال الحجز");
+      console.error(error);
+    }
+  };
 
   return (
-    <div>
+    <div className="public-home bodyy">
       <div id="top"></div>
 
       {/* Navbar */}
@@ -20,12 +225,7 @@ const PublicHome = () => {
           <a href="#top" className="navbar-brand d-flex align-items-center">
             <strong>عيادة د. جمال أبورجيلة</strong>
           </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#clinicNavbar"
-          >
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#clinicNavbar">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="clinicNavbar">
@@ -45,18 +245,9 @@ const PublicHome = () => {
           <h2 className="text-center mb-4">نبذة عن الطبيب</h2>
           <div className="row align-items-start flex-row-reverse">
             <div className="col-md-4 text-center mb-3">
-              <img
-                src={profileImg}
-                className="rounded-circle shadow"
-                alt="صورة دكتور جمال أبورجيلة"
-                width="250"
-                height="250"
-                loading="lazy"
-              />
+              <img src={profileImg} className="rounded-circle shadow" alt="صورة دكتور جمال أبورجيلة" width="250" height="250" loading="lazy" />
               <h4 className="mt-3">د. جمال أبورجيلة</h4>
-              <p className="text-muted">
-                استشاري أول في علاج وجراحة المسالك البولية والكلى والبروستاتا، وأمراض الذكورة والعقم عند الرجال.
-              </p>
+              <p className="text-muted">استشاري أول في علاج وجراحة المسالك البولية والكلى والبروستاتا، وأمراض الذكورة والعقم عند الرجال.</p>
             </div>
             <div className="col-md-8">
               <ul className="list-group list-group-flush">
@@ -80,8 +271,7 @@ const PublicHome = () => {
       <section id="services" className="container-fluid py-5">
         <h2 className="text-center mb-4">الخدمات الطبية</h2>
         <div className="row g-4">
-          {[
-            { title: "علاج أمراض الكلى", text: "تشخيص وعلاج القصور الكلوي، الالتهابات، والفشل الكلوي المزمن." },
+          {[{ title: "علاج أمراض الكلى", text: "تشخيص وعلاج القصور الكلوي، الالتهابات، والفشل الكلوي المزمن." },
             { title: "حصوات الكلى والمثانة", text: "علاج الحصوات بالأدوية أو الموجات التصادمية أو التدخل الجراحي البسيط." },
             { title: "أمراض الذكورة والعقم", text: "علاج ضعف الانتصاب والعقم عند الرجال باستخدام أحدث البروتوكولات." }
           ].map((service, i) => (
@@ -98,7 +288,7 @@ const PublicHome = () => {
       </section>
 
       {/* Clinics */}
-      <section id="clinics" className="container py-5">
+  <section id="clinics" className="container py-5">
         <h2 className="text-center mb-5 text-primary fw-bold">أماكن وعناوين العيادات</h2>
         <div className="row g-4">
           {[
@@ -158,30 +348,58 @@ const PublicHome = () => {
         </div>
       </section>
 
+
       {/* Booking */}
       <section id="booking" className="bg-light py-5">
         <div className="container-fluid">
           <h2 className="text-center mb-4">حجز موعد</h2>
-          <form className="row g-3">
+          <form className="row g-3" onSubmit={handleSubmit}>
             <div className="col-md-6">
               <label htmlFor="name" className="form-label">الاسم</label>
-              <input type="text" className="form-control" id="name" required />
+              <input
+                type="text"
+                className={`form-control ${nameError ? 'is-invalid' : ''}`}
+                id="name"
+                value={formData.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+              />
+              {nameError && <div className="invalid-feedback">{nameError}</div>}
             </div>
             <div className="col-md-6">
               <label htmlFor="phone" className="form-label">رقم الهاتف</label>
-              <input type="tel" className="form-control" id="phone" required />
+              <input
+                type="tel" // Use type="tel" for phone numbers
+                className={`form-control ${phoneError ? 'is-invalid' : ''}`}
+                id="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+              />
+              {phoneError && <div className="invalid-feedback">{phoneError}</div>}
             </div>
             <div className="col-md-6">
               <label htmlFor="clinic" className="form-label">اختيار العيادة</label>
-              <select id="clinic" className="form-select" required>
+              <select id="clinic" className="form-select" value={formData.clinic} onChange={handleChange} required>
                 <option value="">اختر العيادة</option>
-                <option>عيادة المطرية</option>
-                <option>عيادة المرج</option>
+                <option value="المطرية">عيادة المطرية</option>
+                <option value="مصر الجديدة">عيادة مصر الجديدة</option>
               </select>
             </div>
             <div className="col-md-6">
               <label htmlFor="date" className="form-label">تاريخ الحجز</label>
-              <input type="date" className="form-control" id="date" required />
+              <input
+                type="date"
+                className="form-control"
+                id="date"
+                value={formData.date}
+                onChange={handleChange}
+                min={minDate}
+                max={maxDate}
+                required
+              />
             </div>
             <div className="col-12 text-center">
               <button type="submit" className="btn btn-primary">حجز الآن</button>

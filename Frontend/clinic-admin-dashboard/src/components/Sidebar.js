@@ -10,7 +10,7 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar">
-      <h2>{t("clinic_panel")}</h2>
+      <div className="sidebar-header">
       {role === "admin" && <Link to="/">{t("dashboard")}</Link>}
       <Link to="/patients">{t("patients")}</Link>
       {role === "admin" && <Link to="/appointments">{t("appointments")}</Link>}
@@ -19,6 +19,8 @@ const Sidebar = () => {
       {role === "receptionist" && <Link to="/payments">{t("payments")}</Link>}
       {role === "admin" && <Link to="/settings">{t("settings")}</Link>}
     </div>
+</div>
+
   );
 };
 
