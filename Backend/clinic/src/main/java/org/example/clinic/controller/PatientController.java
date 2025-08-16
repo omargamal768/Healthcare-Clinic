@@ -32,7 +32,7 @@ public class PatientController {
  }
 //******************************************************************************************************
 
- //API to return list of all patients
+ //API to return the list of all patients
  @CrossOrigin(origins = "http://localhost:3000") // Allow frontend to access this
  @GetMapping("/")
  public ResponseEntity<Map<String, Object>> getAllPatients(
@@ -79,20 +79,20 @@ public class PatientController {
   return ResponseEntity.ok(Map.of("message", "✅ Patient deleted successfully", "deletedPatient", patient));}
 //*****************************************************************************************************************
 
-//Api return json object of patient by mobile
+//Api return JSON object of patient by mobile
  @GetMapping("/mobile/{mobile}")
  public ResponseEntity<PatientDTO> getPatientByMobile(@PathVariable String mobile) {
   PatientDTO patientDTO = patientService.getPatientByMobile(mobile);
   return ResponseEntity.ok(patientDTO);}
 //*******************************************************************************************
 
- //Api return json object of patient by id
+ //Api return JSON object of patient by id
  @GetMapping("/{id}")
  public ResponseEntity<PatientDTO> getPatientById(@PathVariable @Min(1) Long id) {
   PatientDTO patientDTO = patientService.findById(id);
   return ResponseEntity.ok(patientDTO);}
  //**************************************************************************************************
-//Api return json object of patient by name
+//Api return JSON object of patient by name
  @GetMapping("/name/{name}")
  public ResponseEntity<List<PatientDTO>> getPatientsByName(@PathVariable String name) {
   List<PatientDTO> patientDTOs = patientService.getPatientsByName(name);

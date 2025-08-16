@@ -5,7 +5,6 @@ import org.example.clinic.repo.PatientRepository;
 import org.example.clinic.utils.PatientMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -70,14 +69,14 @@ public PatientDTO findById(Long id) {
     patientRepository.deleteById(id);}
 //*********************************************************************************************************************
 
-//Method to return patient object by his mobile
+//Method to return a patient object by his mobile
 public PatientDTO getPatientByMobile(String mobile) {
     Patient patient = patientRepository.findByMobileContaining(mobile)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "❌ Patient not found with mobile " + mobile));
     return PatientMapper.toDTO(patient);}
 //*********************************************************************************************************************
-//Method to return patient object by his name
+//Method to return a patient object by his name
 public List<PatientDTO> getPatientsByName(String name) {
     List<Patient> patients = patientRepository.findByNameContaining(name);
     if (patients.isEmpty()) {
