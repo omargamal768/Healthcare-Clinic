@@ -12,6 +12,7 @@ const Sidebar = () => {
     <div className="sidebar">
       <div className="sidebar-header">
       {role === "admin" && <Link to="/">{t("dashboard")}</Link>}
+      {(role === "admin" || role === "receptionist") && <Link to="/orders">{t("orders")}</Link>}
       <Link to="/patients">{t("patients")}</Link>
       {role === "admin" && <Link to="/appointments">{t("appointments")}</Link>}
       {role === "receptionist" && <Link to="/appointments">{t("appointments")}</Link>}

@@ -1,0 +1,73 @@
+/* src/components/Table.css */
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.custom-table th,
+.custom-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.custom-table thead {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.custom-table th {
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.custom-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #e9ecef;
+  transition: background-color 0.3s ease;
+}
+
+.custom-table td {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table-empty-message {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  font-size: 1.2em;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Specific button styling for table actions */
+.custom-table .btn {
+  padding: 6px 12px;
+  font-size: 0.85em;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-table .btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+}
+
+.custom-table .btn-danger:hover {
+  background-color: #c82333;
+}

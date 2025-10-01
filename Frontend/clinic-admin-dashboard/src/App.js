@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import AddAppointment from "./pages/AddAppoiment";
 import axios from "axios";
 import PublicHome from "./pages/PublicHome";
-import Orders from "./pages/Orders"; // ✅ Import your Orders page
+import Orders from "./pages/Orders";
 
 // ------------------- Role Context -------------------
 const RoleContext = createContext();
@@ -56,7 +56,10 @@ const App = () => {
 
   const [appointments, setAppointments] = useState([]);
   const [payments, setPayments] = useState([]);
-  const [orders, setOrders] = useState([]); // ✅ NEW state for Orders
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const pageSize = 10;
 
   // ------------------- RTL toggle -------------------
   useEffect(() => {
@@ -74,7 +77,7 @@ const App = () => {
       const response = await axios.get(
         `http://localhost:8080/admin/api/patients/?page=${currentPage - 1}`,
         { headers: { Authorization: `Bearer ${token}` } }
-      );
+);
       if (response.data.status === "success") {
         setPatients(response.data.data);
         setTotalPatients(response.data.total);
@@ -102,16 +105,27 @@ const App = () => {
   };
 
   // ------------------- Fetch Orders -------------------
-  const fetchOrdersData = async () => {
+// App.js
+
+const fetchOrdersData = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/public/orders/");
-      if (response.status === 200) {
-        setOrders(response.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch orders:", error);
+        setLoading(true);
+        // Correct the page number for the API call (0-based)
+        const apiPage = currentPage - 1; 
+        console.log("Fetching orders for page:", apiPage);
+
+        // ⚠️ Now, the API call should use the corrected page number
+        const response = await axios.get(`http://localhost:8080/api/public/orders/?page=${apiPage}&size=${pageSize}`);
+        
+        setOrders(response.data.data);
+        setTotalPages(response.data.totalPages);
+        setLoading(false);
+    } catch (err) {
+        setError("Failed to fetch orders.");
+        setLoading(false);
+        console.error("Failed to fetch orders:", err);
     }
-  };
+};
 
   // ------------------- Delete Order -------------------
   const handleOrderDelete = async (id) => {
@@ -127,14 +141,39 @@ const App = () => {
       console.error("Failed to delete order:", error);
     }
   };
+  const handleOrderActivation = async (id) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `http://localhost:8080/api/public/orders/${id}/activate`,
+      {}, // Empty body for a PUT request
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    if (response.status === 200) {
+      // Assuming a successful activation means removing the order from the list
+      // as it's no longer 'pending'
+      setOrders((prev) => prev.filter((o) => o.id !== id));
+      // You might instead want to update its status, depending on your backend
+    }
+  } catch (error) {
+    console.error("Failed to activate order:", error);
+  }
+};
 
   // ------------------- Initial fetch -------------------
-  useEffect(() => {
-    fetchPatientsData();
-    fetchReservations();
-    fetchOrdersData(); // ✅ also fetch orders
-  }, [currentPage, numFetches]);
+  // App.js
 
+useEffect(() => {
+  fetchPatientsData();
+  fetchReservations();
+  // This will re-run when `currentPage` changes or when the other fetches are called.
+  fetchOrdersData();
+}, [currentPage, numFetches]); // ⬅️ You can simplify this.
+
+// Simplified useEffect
+useEffect(() => {
+  fetchOrdersData();
+}, [currentPage]);
   // ------------------- CRUD Patients -------------------
   const addPatient = async (newPatient) => {
     try {
@@ -301,19 +340,21 @@ const App = () => {
                     }
                   />
 
-                  {/* ✅ Orders route */}
+                  {/* Orders route */}
                   <Route
                     path="/orders"
                     element={
-                      <PrivateRoute allowedRoles={["admin"]}>
+                      <PrivateRoute allowedRoles={["receptionist", "admin"]}>
                         <Orders
                           orders={orders}
                           setOrders={setOrders}
-                          currentPage={currentPage}
+                          onDeleteOrder={handleOrderDelete}
+                          onActivateOrder={handleOrderActivation}
+                           currentPage={currentPage}
                           setCurrentPage={setCurrentPage}
                           totalPages={totalPages}
-                          fetchOrdersData={fetchOrdersData}
-                          handleOrderDelete={handleOrderDelete}
+                          loading={loading}
+                          error={error}
                         />
                       </PrivateRoute>
                     }

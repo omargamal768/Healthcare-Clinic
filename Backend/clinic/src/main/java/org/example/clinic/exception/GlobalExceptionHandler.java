@@ -1,26 +1,47 @@
 package org.example.clinic.exception;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<?> handleResponseStatusException(ResponseStatusException e) {
-        return ResponseEntity.status(e.getStatusCode()).body(Map.of("message", Objects.requireNonNull(e.getReason())));
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    // 🟢 Duplicate (mobile + date)
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        logger.warn("⚠️ Database constraint violation: {}", ex.getMostSpecificCause().getMessage());
+
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("status", HttpStatus.CONFLICT.value());
+        errorResponse.put("error", "Duplicate Order");
+        errorResponse.put("message", "❌ هذا الرقم لديه حجز بالفعل في هذا التاريخ!");
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT); // 409
     }
 
+    // 🟢 Any other unexpected exception
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGeneralException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
-                "message", "❌ An unexpected error occurred: " + e.getMessage()
-        ));
+    public ResponseEntity<Map<String, Object>> handleGeneralException(Exception ex) {
+        logger.error("❌ Unexpected error: ", ex);
+
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("timestamp", LocalDateTime.now());
+        errorResponse.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        errorResponse.put("error", "Internal Server Error");
+        errorResponse.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

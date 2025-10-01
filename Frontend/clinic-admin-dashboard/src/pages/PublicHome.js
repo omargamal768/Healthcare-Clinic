@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Popup from '../components/Popup'; // Import the Popup component
 import "../styles/public.css";
 import profileImg from '../imges/profile.png';
 
 const PublicHome = () => {
-    // State to hold form data. 'mobile' is used consistently.
+    // State to hold form data
     const [formData, setFormData] = useState({
         name: '',
-        mobile: '', // This will now act as 'mobile'
+        mobile: '',
         email: '',
         date: ''
     });
@@ -21,91 +22,95 @@ const PublicHome = () => {
     const [mobileError, setMobileError] = useState('');
     const [emailError, setEmailError] = useState('');
 
-    useEffect(() => {
-        // Add RTL class to body for Arabic layout
-        document.body.classList.add('rtl');
+    // --- New States for the Popup ---
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [popupMessage, setPopupMessage] = useState({
+        title: '',
+        body: '',
+        type: '' // 'success' or 'error'
+    });
 
-        // Calculate min and max dates for the date picker
+    useEffect(() => {
+        document.body.classList.add('rtl');
         const today = new Date();
         const year = today.getFullYear();
         const month = today.getMonth();
-        // Set last day of the current month as the max date for booking
         const lastDayOfMonth = new Date(year, month + 1, 0);
 
-        // Helper to format date to YYYY-MM-DD (en-CA locale ensures this format)
         const formatDateLocal = (date) => date.toLocaleDateString('en-CA');
 
         setMinDate(formatDateLocal(today));
         setMaxDate(formatDateLocal(lastDayOfMonth));
 
-        // Cleanup: remove RTL class when component unmounts
         return () => {
             document.body.classList.remove('rtl');
         };
-    }, []); // Empty dependency array means this effect runs once on mount
+    }, []);
+
+    // Helper function to show the popup
+    const showPopup = (title, message, type) => {
+        setPopupMessage({ title, body: message, type });
+        setIsPopupVisible(true);
+    };
+
+    // Helper function to close the popup
+    const closePopup = () => {
+        setIsPopupVisible(false);
+    };
 
     // --- Validation Functions ---
-
     const validateName = (nameValue) => {
         if (!nameValue) return "الاسم مطلوب.";
         if (nameValue.length > 30) {
             return "الاسم يجب أن لا يزيد عن 30 حرفًا.";
         }
-        // Check for at least two words (name must contain a space)
         if (nameValue.trim().split(/\s+/).length < 2) {
             return "الاسم يجب أن يحتوي على كلمتين على الأقل.";
         }
-        return ""; // No error
+        return "";
     };
 
     const validateMobile = (mobileValue) => {
         if (!mobileValue) return "رقم الموبايل مطلوب.";
-        // Regex: starts with 010, 011, 012, or 015 AND is exactly 11 digits
         if (!/^01[0125][0-9]{8}$/.test(mobileValue)) {
             return "رقم الموبايل يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015 ويكون 11 رقمًا.";
         }
-        return ""; // No error
+        return "";
     };
 
     const validateEmail = (emailValue) => {
         if (!emailValue) return "البريد الإلكتروني مطلوب.";
-        // Basic email regex for format validation
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
             return "البريد الإلكتروني غير صحيح.";
         }
-        return ""; // No error
+        return "";
     };
 
     // --- Event Handlers ---
-
     const handleChange = (e) => {
         const { id, value } = e.target;
-        let newValue = value; // Temporary variable for value
+        let newValue = value;
 
-        // Specific handling for mobile to allow only digits and limit length
         if (id === 'mobile') {
-            newValue = value.replace(/[^0-9]/g, ''); // Allow only digits
+            newValue = value.replace(/[^0-9]/g, '');
             if (newValue.length > 11) {
-                newValue = newValue.slice(0, 11); // Truncate to 11 digits
+                newValue = newValue.slice(0, 11);
             }
-            setMobileError(''); // Clear mobile error on type (re-validate on blur/submit)
+            setMobileError('');
         } else if (id === 'name') {
             if (newValue.length > 30) {
-                newValue = newValue.slice(0, 30); // Truncate to 30 characters
+                newValue = newValue.slice(0, 30);
             }
-            setNameError(''); // Clear name error on type
+            setNameError('');
         } else if (id === 'email') {
-            setEmailError(''); // Clear email error on type
+            setEmailError('');
         } else if (id === 'date') {
             const selectedDate = new Date(value);
-            // Check if the selected day is Friday (Friday is day 5 in getDay())
             if (selectedDate.getDay() === 5) {
-                alert("لا يمكن الحجز يوم الجمعة لأنه عطلة");
-                newValue = ''; // Clear the invalid date
+                showPopup("خطأ في التاريخ", "لا يمكن الحجز يوم الجمعة لأنه عطلة.", 'error');
+                newValue = '';
             }
         }
-
-        // Update formData state
         setFormData(prev => ({ ...prev, [id]: newValue }));
     };
 
@@ -123,62 +128,47 @@ const PublicHome = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Perform all validations on form submission
         const nameValidationError = validateName(formData.name);
         const mobileValidationError = validateMobile(formData.mobile);
         const emailValidationError = validateEmail(formData.email);
 
-        // Set error states for display
         setNameError(nameValidationError);
         setMobileError(mobileValidationError);
         setEmailError(emailValidationError);
 
-        // If any validation fails, stop submission and alert user
         if (nameValidationError || mobileValidationError || emailValidationError || !formData.date) {
-            alert("الرجاء مراجعة البيانات المدخلة والتأكد من صحتها.");
+            showPopup("خطأ في البيانات", "الرجاء مراجعة البيانات المدخلة والتأكد من صحتها.", 'error');
             return;
         }
 
         try {
-            // Construct the request body matching the API's expected format
             const requestBody = {
                 name: formData.name,
-                mobile: formData.mobile, // Ensure this matches the backend's expected key
+                mobile: formData.mobile,
                 email: formData.email,
                 date: formData.date
             };
 
-            // Send the POST request to your API endpoint
             const response = await axios.post('http://localhost:8080/api/public/orders/', requestBody);
-            
-            // Check for a successful response status code
+
             if (response.status === 200 || response.status === 201) {
-                alert("تم إرسال الحجز بنجاح");
-                // Clear form fields after successful submission
+                showPopup("تم الحجز بنجاح", "تم إرسال الحجز بنجاح.", 'success');
                 setFormData({ name: '', mobile: '', email: '', date: '' });
                 setNameError('');
                 setMobileError('');
                 setEmailError('');
             } else {
-                alert("فشل إرسال الحجز: " + (response.data.message || "خطأ غير معروف"));
+                showPopup("فشل الحجز", "فشل إرسال الحجز: " + (response.data.message || "خطأ غير معروف"), 'error');
             }
 
         } catch (error) {
-            // Handle API call errors (network issues, server errors, etc.)
             console.error("خطأ أثناء إرسال الحجز:", error);
             if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.error("بيانات الخطأ من الخادم:", error.response.data);
-                alert("حدث خطأ أثناء إرسال الحجز: " + (error.response.data.message || "الرجاء المحاولة مرة أخرى لاحقًا."));
+                showPopup("خطأ من الخادم", "حدث خطأ أثناء إرسال الحجز: " + (error.response.data.message || "الرجاء المحاولة مرة أخرى لاحقًا."), 'error');
             } else if (error.request) {
-                // The request was made but no response was received
-                console.error("لم يتم استلام رد من الخادم:", error.request);
-                alert("لا يوجد اتصال بالخادم. الرجاء التحقق من اتصالك بالإنترنت.");
+                showPopup("خطأ في الاتصال", "لا يوجد اتصال بالخادم. الرجاء التحقق من اتصالك بالإنترنت.", 'error');
             } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error("خطأ في إعداد الطلب:", error.message);
-                alert("حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى.");
+                showPopup("خطأ غير متوقع", "حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى.", 'error');
             }
         }
     };
@@ -291,7 +281,6 @@ const PublicHome = () => {
                                         <strong>مواعيد العمل:</strong> {clinic.workingHours}
                                     </p>
                                     <div className="location rounded overflow-hidden shadow-sm mb-3">
-                                        {/* Using an external image for the map, as Google Maps embed might require API keys or proper attribution */}
                                         <iframe
                                             src={`https://maps.google.com/maps?q=${clinic.coords}&z=15&output=embed`}
                                             width="100%"
@@ -301,7 +290,6 @@ const PublicHome = () => {
                                             loading="lazy"
                                             title={clinic.title}
                                         ></iframe>
-                                        
                                     </div>
                                     <a
                                         href={`https://wa.me/2${clinic.phone.replace(/^0/, "")}`}
@@ -320,14 +308,14 @@ const PublicHome = () => {
 
             {/* Booking Section */}
             <section id="booking" className="bg-light py-5">
-                <div className="container-fluid">
+                <div className="container">
                     <h2 className="text-center mb-4">حجز موعد</h2>
-                    <form className="row g-3" onSubmit={handleSubmit}>
-                        <div className="col-md-6">
+                    <form className="row g-3 justify-content-center" onSubmit={handleSubmit}>
+                        <div className="col-md-4">
                             <label htmlFor="name" className="form-label">الاسم</label>
                             <input
                                 type="text"
-                                className={`form-control ${nameError ? 'is-invalid' : ''}`}
+                                className={`form-control form-control-sm ${nameError ? 'is-invalid' : ''}`}
                                 id="name"
                                 value={formData.name}
                                 onChange={handleChange}
@@ -336,11 +324,11 @@ const PublicHome = () => {
                             />
                             {nameError && <div className="invalid-feedback">{nameError}</div>}
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label htmlFor="email" className="form-label">البريد الإلكتروني</label>
                             <input
-                                type="email" // Changed to type="email" for better browser validation
-                                className={`form-control ${emailError ? 'is-invalid' : ''}`}
+                                type="email"
+                                className={`form-control form-control-sm ${emailError ? 'is-invalid' : ''}`}
                                 id="email"
                                 value={formData.email}
                                 onChange={handleChange}
@@ -349,12 +337,12 @@ const PublicHome = () => {
                             />
                             {emailError && <div className="invalid-feedback">{emailError}</div>}
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label htmlFor="mobile" className="form-label">رقم الهاتف</label>
                             <input
-                                type="tel" // Use type="tel" for phone numbers
-                                className={`form-control ${mobileError ? 'is-invalid' : ''}`}
-                                id="mobile" // Keep id as 'mobile' for consistency
+                                type="tel"
+                                className={`form-control form-control-sm ${mobileError ? 'is-invalid' : ''}`}
+                                id="mobile"
                                 value={formData.mobile}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
@@ -362,12 +350,11 @@ const PublicHome = () => {
                             />
                             {mobileError && <div className="invalid-feedback">{mobileError}</div>}
                         </div>
-
-                        <div className="col-md-6">
+                        <div className="col-md-4">
                             <label htmlFor="date" className="form-label">تاريخ الحجز</label>
                             <input
                                 type="date"
-                                className="form-control"
+                                className="form-control form-control-sm"
                                 id="date"
                                 value={formData.date}
                                 onChange={handleChange}
@@ -377,11 +364,26 @@ const PublicHome = () => {
                             />
                         </div>
                         <div className="col-12 text-center">
-                            <button type="submit" className="btn btn-primary">حجز الآن</button>
+                            <button type="submit" className="btn btn-primary px-4">حجز الآن</button>
                         </div>
                     </form>
                 </div>
             </section>
+
+            {/* Popup Component - rendered at the top level of the app */}
+            <Popup isVisible={isPopupVisible} onClose={closePopup}>
+                {popupMessage.type === 'success' ? (
+                    <div className="text-center">
+                        <h4 className="text-success mb-3">✅ {popupMessage.title}</h4>
+                        <p>{popupMessage.body}</p>
+                    </div>
+                ) : (
+                    <div className="text-center">
+                        <h4 className="text-danger mb-3">❌ {popupMessage.title}</h4>
+                        <p>{popupMessage.body}</p>
+                    </div>
+                )}
+            </Popup>
 
             {/* Footer */}
             <footer className="text-center mt-5 py-4 bg-white shadow-sm">

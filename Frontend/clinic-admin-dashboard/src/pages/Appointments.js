@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "../styles/Appointments.css";
-import "../styles/commonTableStyles.css";
 import { useTranslation } from "react-i18next";
+import Table from "../components/Table"; // ⬅️ Import the reusable Table component
+import "../styles/Appointments.css";
+// Remove "../styles/commonTableStyles.css" as Table.js handles its own styles
 
 const Appointments = ({ appointments, setAppointments, payments }) => {
   const { t } = useTranslation();
@@ -34,12 +35,72 @@ const Appointments = ({ appointments, setAppointments, payments }) => {
     (dateFilter === "" || appt.date === dateFilter)
   );
 
+  // 1. Define the columns array for the appointments table
+  const appointmentColumns = [
+    { key: "turn", header: "turn" },
+    { key: "patientName", header: "patient" },
+    { key: "date", header: "date" },
+    { key: "dayOfWeek", header: "day" },
+    { key: "clinicName", header: "clinic" },
+    { key: "type", header: "type" },
+    {
+      key: "appointment_status",
+      header: "appointment_status",
+      // Use render to handle conditional status text and class
+      render: (appt) => (
+        <span className={appt.cancelled ? "cancelled" : appt.success ? "success" : ""}>
+          {appt.cancelled
+            ? t("cancelled")
+            : appt.success
+            ? t("completed")
+            : t("pending")}
+        </span>
+      ),
+    },
+    {
+      key: "payment_status",
+      header: "payment_status",
+      // Use render to find and display the correct payment status
+      render: (appt) => {
+        const relatedPayment = payments.find(
+          (payment) => payment.appointmentId === appt.id
+        );
+        return relatedPayment
+          ? t(relatedPayment.status.toLowerCase())
+          : t("not_paid");
+      },
+    },
+    {
+      key: "actions",
+      header: "actions",
+      // Use render to conditionally display the action buttons
+      render: (appt) => (
+        !appt.cancelled && !appt.success && (
+          <>
+            <button
+              className="complete-btn"
+              onClick={() => markAsCompleted(appt.id)}
+            >
+              {t("completed")}
+            </button>
+            <button
+              className="cancel-btn"
+              onClick={() => cancelAppointment(appt.id)}
+            >
+              {t("cancel")}
+            </button>
+          </>
+        )
+      ),
+    },
+  ];
+
   return (
     <div className="appointments-container">
       <h1>{t("appointments")}</h1>
       <p>{t("manage_appointments_efficiently")}</p>
 
-      {/* Filters */}
+      {/* Filters (no change here) */}
       <div className="filters">
         <input
           type="text"
@@ -74,74 +135,8 @@ const Appointments = ({ appointments, setAppointments, payments }) => {
         />
       </div>
 
-      {/* Appointments Table */}
-      {filteredAppointments.length > 0 ? (
-        <table className="appointments-table">
-          <thead>
-            <tr>
-              <th>{t("turn")}</th><th>{t("patient")}</th><th>{t("date")}</th>
-              <th>{t("day")}</th><th>{t("clinic")}</th><th>{t("type")}</th>
-              <th>{t("appointment_status")}</th>
-              <th>{t("payment_status")}</th>
-              <th>{t("actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAppointments.map((appt) => {
-              const relatedPayment = payments.find(
-                (payment) => payment.appointmentId === appt.id
-              );
-              const paymentStatus = relatedPayment
-                ? t(relatedPayment.status.toLowerCase())
-                : t("not_paid");
-
-              return (
-                <tr
-                  key={appt.id}
-                  className={
-                    appt.cancelled ? "cancelled" : appt.success ? "success" : ""
-                  }
-                >
-                  <td>{appt.turn}</td>
-                  <td>{t(appt.patientName)}</td>
-                  <td>{appt.date}</td>
-                  <td>{t(appt.dayOfWeek)}</td>
-                  <td>{t(appt.clinicName)}</td>
-                  <td>{t(appt.type)}</td>
-                  <td>
-                    {appt.cancelled
-                      ? t("cancelled")
-                      : appt.success
-                      ? t("completed")
-                      : t("pending")}
-                  </td>
-                  <td>{paymentStatus}</td>
-                  <td>
-                    {!appt.cancelled && !appt.success && (
-                      <>
-                        <button
-                          className="complete-btn"
-                          onClick={() => markAsCompleted(appt.id)}
-                        >
-                          {t("completed")}
-                        </button>
-                        <button
-                          className="cancel-btn"
-                          onClick={() => cancelAppointment(appt.id)}
-                        >
-                          {t("cancel")}
-                        </button>
-                      </>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      ) : (
-        <p className="no-results">{t("no_appointments_found")}</p>
-      )}
+      {/* 2. Use the Table component with the filtered data and defined columns */}
+      <Table data={filteredAppointments} columns={appointmentColumns} />
     </div>
   );
 };
