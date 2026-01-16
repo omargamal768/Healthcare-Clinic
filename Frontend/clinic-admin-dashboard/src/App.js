@@ -18,6 +18,8 @@ import AddAppointment from "./pages/AddAppoiment";
 import axios from "axios";
 import PublicHome from "./pages/PublicHome";
 import Orders from "./pages/Orders";
+import Companies from "./pages/Companies";
+import AddCompany from "./pages/AddCompany";
 
 // ------------------- Role Context -------------------
 const RoleContext = createContext();
@@ -252,6 +254,32 @@ useEffect(() => {
                   )
                 }
               />
+              <Route
+  path="/companies"
+  element={
+    <PrivateRoute allowedRoles={["admin"]}>
+      <Companies />
+    </PrivateRoute>
+  }
+/>
+<Route
+  path="/companies/add"
+  element={
+    <PrivateRoute allowedRoles={["admin"]}>
+      <AddCompany />
+    </PrivateRoute>
+  }
+/>
+
+<Route
+  path="/companies/edit/:id"
+  element={
+    <PrivateRoute allowedRoles={["admin"]}>
+      <AddCompany />
+    </PrivateRoute>
+  }
+/>
+
               {/* Login */}
               <Route path="/login" element={<Login onLogin={setRole} />} />
 

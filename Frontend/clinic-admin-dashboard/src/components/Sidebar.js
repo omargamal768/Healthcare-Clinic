@@ -18,6 +18,10 @@ const Sidebar = () => {
       {role === "receptionist" && <Link to="/appointments">{t("appointments")}</Link>}
       {role === "admin" && <Link to="/payments">{t("payments")}</Link>}
       {role === "receptionist" && <Link to="/payments">{t("payments")}</Link>}
+       {/* ✅ Insurance Companies (Admin Only) */}
+        {role === "admin" && (
+          <Link to="/companies">{t("companies")}</Link>
+        )}
       {role === "admin" && <Link to="/settings">{t("settings")}</Link>}
     </div>
 </div>

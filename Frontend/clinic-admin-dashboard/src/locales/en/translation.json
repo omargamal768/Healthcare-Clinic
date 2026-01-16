@@ -11,7 +11,8 @@
   "appointments": "Appointments",
   "payments": "Payments",
   "control_panel": "Control Panel",
-
+"companies": "Insurance Companies"
+,
   "total_patients": "Total Patients",
   "all_examinations": "All Examinations",
   "all_consultations": "All Consultations",

@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // Removed useEffect as it's not directly used here
+import React, { useState,useEffect } from "react"; // Removed useEffect as it's not directly used here
 import {
   FaUserMd,
   FaCalendarCheck,
@@ -18,6 +18,7 @@ import {
 import "../styles/Dashboard.css";
 import { useTranslation } from "react-i18next";
 // import axios from "axios"; // Removed axios as it's not directly used here
+import { getAllCompanies } from "../services/companyService";
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -68,6 +69,22 @@ const Dashboard = ({ appointments, totalPatients, patients, onMarkAppointmentCom
       // and pass updated appointments back down as props.
     }
   };
+  useEffect(() => {
+
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    getAllCompanies(token)
+      .then(res => {
+        console.log("ADMIN Companies Loaded:", res.data);
+      })
+      .catch(err => {
+        console.error("ADMIN Company API Error:", err);
+      });
+  }
+
+}, []);
+
 
   return (
     <div className="dashboard">
