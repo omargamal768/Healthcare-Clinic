@@ -58,14 +58,23 @@ public class PublicReservationController {
     }
 
     private String getArabicDayName(DayOfWeek dayOfWeek) {
-        return switch (dayOfWeek) {
-            case SATURDAY -> "السبت";
-            case SUNDAY -> "الأحد";
-            case MONDAY -> "الاثنين";
-            case TUESDAY -> "الثلاثاء";
-            case WEDNESDAY -> "الأربعاء";
-            case THURSDAY -> "الخميس";
-            case FRIDAY -> "الجمعة";
-        };
+        switch (dayOfWeek) {
+            case SATURDAY:
+                return "السبت";
+            case SUNDAY:
+                return "الأحد";
+            case MONDAY:
+                return "الاثنين";
+            case TUESDAY:
+                return "الثلاثاء";
+            case WEDNESDAY:
+                return "الأربعاء";
+            case THURSDAY:
+                return "الخميس";
+            case FRIDAY:
+                return "الجمعة";
+            default:
+                return "";
+        }
     }
 }

@@ -1,6 +1,6 @@
 package org.example.clinic.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -29,6 +29,18 @@ public class Reservation {
     @JoinColumn(name = "patient_id", nullable = false)
     @JsonIgnoreProperties(value = {"reservations"})
     private Patient patient;
+    
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = true)
+    @JsonIgnoreProperties(value = {"reservations"})
+    private Company company;
+    
+    @Column(name = "papers_sent")
+    private Boolean papersSent = false;
+    
+    @Column(name = "papers_sent_date")
+    private LocalDate papersSentDate;
+    
     @PrePersist
     @PreUpdate
     private void checkCancellation() {

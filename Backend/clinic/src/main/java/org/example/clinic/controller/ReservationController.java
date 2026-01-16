@@ -114,6 +114,18 @@ public ResponseEntity<?> createReservation(@RequestBody Reservation reservation)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());}}
 //*********************************************************************************************
 
+//API to get patients needing to send papers for a company
+    @GetMapping("/company/{companyId}/needing-papers")
+    public ResponseEntity<?> getPatientsNeedingPapers(@PathVariable Long companyId) {
+        try {
+            List<ReservationDTO> reservations = reservationService.getPatientsNeedingPapers(companyId);
+            return ResponseEntity.ok(reservations);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("❌ Error: " + e.getMessage());
+        }
+    }
+//*********************************************************************************************
+
 }
 
 

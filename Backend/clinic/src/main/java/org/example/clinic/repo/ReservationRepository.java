@@ -27,4 +27,15 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     // ✅ This is used to get turn number by counting reservations on that date
     int countByDate(LocalDate date);
+    
+    // Company-related queries
+    Long countByCompany(org.example.clinic.model.Company company);
+    
+    Long countByCompanyAndDateBetween(org.example.clinic.model.Company company, LocalDate startDate, LocalDate endDate);
+    
+    Long countByCompanyAndPapersSentFalseAndDateAfter(org.example.clinic.model.Company company, LocalDate date);
+    
+    List<Reservation> findByCompanyAndPapersSentFalseAndDateAfter(org.example.clinic.model.Company company, LocalDate date);
+    
+    List<Reservation> findByCompanyAndDateBetween(org.example.clinic.model.Company company, LocalDate startDate, LocalDate endDate);
 }

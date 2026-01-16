@@ -1,6 +1,6 @@
 package org.example.clinic.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 public class Role {

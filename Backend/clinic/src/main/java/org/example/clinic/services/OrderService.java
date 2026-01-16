@@ -1,13 +1,15 @@
 package org.example.clinic.services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.example.clinic.model.Company;
 import org.example.clinic.model.Order;
 import org.example.clinic.model.Patient;
 import org.example.clinic.model.Reservation;
+import org.example.clinic.repo.CompanyRepository;
 import org.example.clinic.repo.OrderRepo;
 import org.example.clinic.repo.PatientRepository;
 import org.example.clinic.repo.ReservationRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,14 +23,19 @@ import java.util.List;
 
 @Service
 public class OrderService {
-    private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
+    private static final Logger logger = LogManager.getLogger(OrderService.class);
     private final OrderRepo orderRepo;
     final  PatientRepository patientRepository;
     final ReservationRepository reservationRepository;
-    public OrderService(OrderRepo orderRepo, PatientRepository patientRepository, ReservationRepository reservationRepository) {
+    final CompanyRepository companyRepository;
+    
+    public OrderService(OrderRepo orderRepo, PatientRepository patientRepository, 
+                       ReservationRepository reservationRepository, CompanyRepository companyRepository) {
         this.orderRepo = orderRepo;
         this.patientRepository = patientRepository;
         this.reservationRepository = reservationRepository;
+        this.companyRepository = companyRepository;
+        logger.info("OrderService initialized");
     }
     public Page<Order> getAllOrders(Pageable pageable) {
         return orderRepo.findByActiveFalse(pageable);
@@ -53,11 +60,11 @@ public class OrderService {
     }
 //here want to make method to activate order by make new patient and new reservation for this order when press activate do this
 @Transactional
-public void activateOrder(Long orderId) {
+public void activateOrder(Long orderId, Long companyId) {
     Order order = orderRepo.findById(orderId)
             .orElseThrow(() -> new IllegalArgumentException("❌ Order not found with ID: " + orderId));
 
-    logger.info("🚀 Activating order with ID: {}", orderId);
+    logger.info("🚀 Activating order with ID: {}, Company ID: {}", orderId, companyId);
 
     // 1️⃣ Find an existing patient by mobile or create a new one
     Patient patient = patientRepository.findByMobile(order.getMobile())
@@ -100,10 +107,20 @@ public void activateOrder(Long orderId) {
     reservation.setPatient(patient);
     reservation.setDate(order.getDate());
     reservation.setTurn(turn);
+    
+    // 7️⃣ Link company if provided
+    if (companyId != null && companyId > 0) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new IllegalArgumentException("❌ Company not found with ID: " + companyId));
+        reservation.setCompany(company);
+        logger.info("✅ Reservation linked to company: ID={}, Name={}", company.getId(), company.getName());
+    } else {
+        logger.info("✅ Reservation created for clinic (no company)");
+    }
 
     reservationRepository.save(reservation);
 
-    // 7️⃣ Update order → active = true
+    // 8️⃣ Update order → active = true
     order.setActive(true);
     orderRepo.save(order);
 

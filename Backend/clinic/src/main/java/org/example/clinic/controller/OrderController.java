@@ -1,6 +1,6 @@
 package org.example.clinic.controller;
 
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.example.clinic.model.Order;
 import org.example.clinic.services.OrderService;
 import org.slf4j.Logger;
@@ -81,23 +81,48 @@ public class OrderController {
 
     @PostMapping("/{orderId}/activate")
     @CrossOrigin(origins = "http://localhost:3000")
-    public ResponseEntity<Map<String, Object>> activateOrder(@PathVariable Long orderId) {
+    public ResponseEntity<Map<String, Object>> activateOrder(
+            @PathVariable Long orderId,
+            @RequestBody(required = false) Map<String, Object> requestBody) {
         logger.info("🌍 API called: Activate order with ID {}", orderId);
 
         try {
-            orderService.activateOrder(orderId);
+            Long companyId = null;
+            if (requestBody != null && requestBody.containsKey("companyId")) {
+                Object companyIdObj = requestBody.get("companyId");
+                if (companyIdObj != null) {
+                    if (companyIdObj instanceof Number) {
+                        companyId = ((Number) companyIdObj).longValue();
+                    } else if (companyIdObj instanceof String && !((String) companyIdObj).isEmpty()) {
+                        companyId = Long.parseLong((String) companyIdObj);
+                    }
+                }
+            }
+            
+            logger.debug("Activating order {} with companyId: {}", orderId, companyId);
+            orderService.activateOrder(orderId, companyId);
+            
             Map<String, Object> response = new HashMap<>();
             response.put("status", "success");
             response.put("message", "Order activated successfully!");
             response.put("orderId", orderId);
+            if (companyId != null) {
+                response.put("companyId", companyId);
+            }
 
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             logger.error("⚠️ Activation failed: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("status", "error", "message", e.getMessage()));
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(errorResponse);
         } catch (Exception e) {
             logger.error("❌ Unexpected error during activation: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError().body(Map.of("status", "error", "message", "Internal server error"));
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("status", "error");
+            errorResponse.put("message", "Internal server error");
+            return ResponseEntity.internalServerError().body(errorResponse);
         }
     }
 

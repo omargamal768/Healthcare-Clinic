@@ -1,7 +1,7 @@
 package org.example.clinic.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;

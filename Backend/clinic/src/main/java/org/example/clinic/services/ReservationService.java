@@ -17,9 +17,14 @@ public class ReservationService {
 //Dependency injection
     private final ReservationRepository reservationRepository;
     private final PatientRepository patientRepository;
+    private final org.example.clinic.repo.CompanyRepository companyRepository;
+    
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository, PatientRepository patientRepository) {this.reservationRepository = reservationRepository;
+    public ReservationService(ReservationRepository reservationRepository, PatientRepository patientRepository,
+                             org.example.clinic.repo.CompanyRepository companyRepository) {
+        this.reservationRepository = reservationRepository;
         this.patientRepository = patientRepository;
+        this.companyRepository = companyRepository;
     }
 //*************************************************************************************************
 
@@ -90,6 +95,19 @@ public List<ReservationDTO> getReservations(Long patientId, LocalDate date) {
         reservation.setCancelled(false);
         reservation.setTurn(0); // Ensure turn is reset to 0
         return reservationRepository.save(reservation);}
+//*******************************************************************************************************************************
+
+//Method to get patients needing to send papers for a company
+    public List<ReservationDTO> getPatientsNeedingPapers(Long companyId) {
+        org.example.clinic.model.Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new IllegalArgumentException("Company not found with ID: " + companyId));
+        
+        int deadlineDays = company.getPapersDeadlineDays() != null ? company.getPapersDeadlineDays() : 30;
+        LocalDate deadlineDate = LocalDate.now().minusDays(deadlineDays);
+        
+        List<Reservation> reservations = reservationRepository.findByCompanyAndPapersSentFalseAndDateAfter(company, deadlineDate);
+        return ReservationMapper.toDTOList(reservations);
+    }
 //*******************************************************************************************************************************
 
 }
